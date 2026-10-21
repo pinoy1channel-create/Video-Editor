@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audz Ai — Text to Video</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+:root{--primary:#4f46e5;--primary-dark:#4338ca;--bg:#0f111a;--card:#1a1d2b;--card-hover:#25293d;--text:#e5e7eb;--text-muted:#9ca3af;--border:#2d3146;--accent:#818cf8}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+header{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border)}
+.logo{font-size:1.4rem;font-weight:700;color:#fff}.logo span{color:var(--accent)}
+.nav-links a{color:var(--text-muted);text-decoration:none;margin:0 1rem;transition:color .2s;cursor:pointer}
+.nav-links a:hover,.nav-links a.active{color:#fff}
+.header-actions{display:flex;align-items:center;gap:.5rem}
+.header-actions button{padding:.6rem 1.2rem;border-radius:6px;cursor:pointer;font-weight:500}
+.btn-outline{background:transparent;color:#fff;border:1px solid var(--border)}
+.btn-primary{background:var(--primary);color:#fff;border:none}.btn-primary:hover{background:var(--primary-dark)}
+#userBox{color:var(--text-muted);font-size:.9rem}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{text-align:center;font-size:2rem;margin-bottom:2rem;background:linear-gradient(90deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.editor-card,.payment-section,.gallery-section{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:2rem;margin-bottom:3rem}
+label{display:block;font-weight:500;margin-bottom:.5rem;color:#d1d5db}
+textarea,input[type=text],input[type=email],input[type=password],input[type=file]{width:100%;background:#141622;border:1px solid var(--border);border-radius:8px;padding:.8rem;color:#fff;font-size:1rem;margin-bottom:.8rem}
+textarea{min-height:120px;resize:vertical;margin-bottom:.5rem}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--primary)}
+.char-count{text-align:right;font-size:.85rem;color:var(--text-muted);margin-bottom:1rem}
+.enhance-btn{background:transparent;color:var(--accent);border:none;cursor:pointer;font-size:.9rem;margin-bottom:1.5rem}
+.enhance-btn:hover{text-decoration:underline}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:1.5rem}
+select{width:100%;padding:.75rem;background:#141622;border:1px solid var(--border);border-radius:6px;color:#fff;font-size:.95rem}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0}
+.toggle-switch{position:relative;width:44px;height:24px;background:#373a4f;border-radius:12px;cursor:pointer;transition:background .2s}
+.toggle-switch.active{background:var(--primary)}
+.toggle-switch::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s}
+.toggle-switch.active::after{transform:translateX(20px)}
+.cost-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem;background:#141622;border-radius:6px;margin:1.5rem 0}
+.recharge-link{color:var(--accent);text-decoration:none;font-size:.9rem;cursor:pointer}
+.generate-btn{width:100%;padding:1rem;background:linear-gradient(90deg,var(--primary),#6366f1);color:#fff;border:none;border-radius:8px;font-size:1.1rem;font-weight:600;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.generate-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.3)}
+.payment-section h2,.gallery-section h2{font-size:1.4rem;margin-bottom:1rem}
+.payment-methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1rem 0}
+.payment-option{padding:1rem;border:1px solid var(--border);border-radius:8px;text-align:center;cursor:pointer;transition:all .2s}
+.payment-option:hover,.payment-option.selected{border-color:var(--primary);background:var(--card-hover)}
+.contact-info{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.contact-info p{margin:.5rem 0;color:var(--text-muted)}.contact-info strong{color:#fff}
+.models-section{text-align:center;margin-bottom:4rem}.models-section h2{font-size:1.6rem;margin-bottom:1rem}
+.models-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-top:2rem}
+.model-tag{padding:.8rem 1.5rem;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.examples-section,.use-cases,.faqs{margin-bottom:4rem}
+.examples-section h2,.use-cases h2,.faqs h2{text-align:center;margin-bottom:2rem}
+.example-card{background:var(--card);border-radius:10px;border:1px solid var(--border);padding:1.2rem;margin-bottom:1rem;cursor:pointer}
+.example-card:hover{border-color:var(--primary)}
+.example-prompt{font-style:italic;color:var(--text-muted)}
+.cases-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem}
+.case-card{background:var(--card);border-radius:10px;border:1px solid var(--border);padding:1.5rem}
+.case-card h3{margin-bottom:.8rem;color:var(--accent)}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:.8rem;overflow:hidden}
+.faq-question{padding:1.2rem;cursor:pointer;display:flex;justify-content:space-between}
+.faq-answer{padding:0 1.2rem 1.2rem;color:var(--text-muted);display:none}
+.faq-item.open .faq-answer{display:block}
+footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:var(--text-muted);font-size:.9rem}
+.hidden{display:none!important}
+.job{display:grid;grid-template-columns:200px 1fr;gap:1rem;padding:1rem 0;border-top:1px solid var(--border)}
+.job .thumb{aspect-ratio:16/9;border-radius:8px;background:linear-gradient(135deg,#4f46e5,#0f111a);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#c7d2fe;text-align:center;padding:.5rem;overflow:hidden}
+.job video{width:100%;height:100%}
+.job small{color:var(--text-muted)}
+.pkgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1rem 0}
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:50;padding:1rem}
+#overlay.show{display:flex}
+#modal{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;max-width:420px;width:100%;max-height:90vh;overflow:auto}
+#modal h3{margin-bottom:1rem}#modal p{color:var(--text-muted);margin-bottom:.8rem;font-size:.95rem}
+#modal .row{display:flex;gap:.5rem}#modal .row button{flex:1;padding:.7rem;border-radius:6px;cursor:pointer;font-weight:500}
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#25293d;border:1px solid var(--primary);padding:.8rem 1.4rem;border-radius:8px;z-index:60;display:none}
+body.locked header,body.locked main,body.locked footer{display:none}#gate{display:none;min-height:100vh;align-items:center;justify-content:center;padding:1rem}body.locked #gate{display:flex}#gate .box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;max-width:400px;width:100%}#gate h2{margin-bottom:.5rem}#gate p{color:var(--text-muted);margin-bottom:1rem;font-size:.95rem}
+@media(max-width:768px){header{flex-wrap:wrap;gap:1rem;padding:1rem}.nav-links{order:3;width:100%}.nav-links a{margin:0 .6rem 0 0}.container{padding:1rem}.job{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="locked">
+<div id="gate"></div>
+<header>
+  <div class="logo"><span>Audz</span>Ai</div>
+  <nav class="nav-links">
+    <a data-view="t2v" class="active">Text to Video</a>
+    <a data-view="i2v">Image to Video</a>
+    <a data-view="gallery">Gallery</a>
+    <a data-view="pricing">Pricing</a>
+  </nav>
+  <div class="header-actions">
+    <span id="userBox"></span>
+    <button class="btn-outline" id="changePwBtn">Change Password</button>
+    <button class="btn-outline" id="logoutBtn">Log Out</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1 id="pageTitle">Text to Video Generator</h1>
+
+  <div class="editor-card" id="editor">
+    <div id="imgField" class="hidden">
+      <label>Source Image</label>
+      <input type="file" id="imgFile" accept="image/*">
+    </div>
+    <label for="prompt">Prompt</label>
+    <textarea id="prompt" maxlength="20000" placeholder="Describe the video you want to create...">An anime-style rose blooms before a rope bridge, with petals dancing in the air.</textarea>
+    <div class="char-count" id="charCount">68 / 20000</div>
+    <button class="enhance-btn" id="enhanceBtn">✨ AI Prompt Enhancement</button>
+
+    <div class="settings-grid">
+      <div><label>Model</label><select id="model"><option selected>Seedance 1.5 Pro</option><option>Veo 3.1 Lite</option><option>Sora 2</option><option>Veo 3</option></select></div>
+      <div><label>Aspect Ratio</label><select id="ratio"><option selected>16:9</option><option>9:16</option><option>4:3</option><option>1:1</option></select></div>
+      <div><label>Duration</label><select id="duration"><option selected>4 seconds</option><option>6 seconds</option><option>8 seconds</option></select></div>
+      <div><label>Resolution</label><select id="resolution"><option>480p</option><option selected>720p</option><option>1080p</option></select></div>
+    </div>
+
+    <div class="toggle-row"><label>Include Sound</label><div class="toggle-switch active" id="soundToggle"></div></div>
+    <div class="toggle-row"><label>Apply Watermark</label><div class="toggle-switch" id="watermarkToggle"></div></div>
+
+    <div class="cost-bar">
+      <div><strong>Credits:</strong> <span id="credits">100</span> available &nbsp;|&nbsp; <strong>Cost:</strong> <span id="costDisplay">4</span></div>
+      <a class="recharge-link" id="rechargeLink">Recharge Credits</a>
+    </div>
+
+    <button class="generate-btn" id="generateBtn">Generate Video</button>
+    <p style="text-align:center;margin-top:1rem;font-size:.9rem"><a class="recharge-link" id="exploreLink">Explore Examples</a></p>
+  </div>
+
+  <div class="gallery-section hidden" id="gallery">
+    <h2>My Gallery</h2>
+    <div id="jobList"></div>
+  </div>
+
+  <div class="payment-section" id="paymentSection">
+    <h2>Recharge Credits — Payment Methods</h2>
+    <p style="color:var(--text-muted)">Choose a credit package:</p>
+    <div class="pkgs" id="pkgs"></div>
+    <p style="color:var(--text-muted)">Choose your preferred payment method:</p>
+    <div class="payment-methods" id="methods">
+      <div class="payment-option selected" data-m="GCash"><strong>GCash</strong><br><span style="font-size:.85rem;color:var(--text-muted)">Philippines</span></div>
+      <div class="payment-option" data-m="PayPal"><strong>PayPal</strong><br><span style="font-size:.85rem;color:var(--text-muted)">Global</span></div>
+      <div class="payment-option" data-m="Card"><strong>Credit/Debit</strong><br><span style="font-size:.85rem;color:var(--text-muted)">Visa/Mastercard</span></div>
+      <div class="payment-option" data-m="Maya"><strong>Maya</strong><br><span style="font-size:.85rem;color:var(--text-muted)">Philippines</span></div>
+    </div>
+    <button class="generate-btn" id="payBtn">Continue to Payment</button>
+    <div class="contact-info">
+      <h3>Business Info</h3>
+      <p><strong>Business Name:</strong> Audz Ai</p>
+      <p><strong>Owner:</strong> Audie Pino — pinoy1.channel@gmail.com</p>
+      <p><strong>Contact Email:</strong> <a href="mailto:audie1.pino@gmail.com" style="color:var(--accent)">audie1.pino@gmail.com</a></p>
+      <p><strong>Location:</strong> Cebu City, Philippines</p>
+      <p><strong>Payment Notes:</strong> After paying, enter your reference number. Credits are added once payment is confirmed.</p>
+    </div>
+  </div>
+
+  <div class="models-section">
+    <h2>All-in-One AI Text to Video Generator</h2>
+    <p style="color:var(--text-muted);max-width:700px;margin:0 auto">Multiple leading video models in one place. Create stunning visuals without juggling multiple services!</p>
+    <div class="models-grid"><div class="model-tag">Sora 2</div><div class="model-tag">Veo 3</div><div class="model-tag">Seedance</div><div class="model-tag">+ More Models</div></div>
+  </div>
+
+  <div class="examples-section" id="examples">
+    <h2>Visualize Any Text with Our AI Video Generator</h2>
+    <p style="text-align:center;color:var(--text-muted);margin-bottom:2rem">Describe your idea — our AI brings it to life! Click an example to use it.</p>
+    <div class="example-card"><p class="example-prompt">An anime-style rose blooms before a rope bridge, with petals dancing in the air.</p></div>
+    <div class="example-card"><p class="example-prompt">A magical forest at twilight, fireflies glowing, gentle stream flowing through mossy stones.</p></div>
+    <div class="example-card"><p class="example-prompt">Futuristic city skyline at sunrise, flying cars passing by, neon lights fading into morning glow.</p></div>
+  </div>
+
+  <div class="use-cases">
+    <h2>Empowering Every Creator</h2>
+    <div class="cases-grid">
+      <div class="case-card"><h3>Content Creators</h3><p>Transform ideas into viral content instantly. No filming required — just describe and create!</p></div>
+      <div class="case-card"><h3>Marketers &amp; Agencies</h3><p>Produce professional ads and social media videos in minutes, not days.</p></div>
+      <div class="case-card"><h3>Educators &amp; Trainers</h3><p>Bring lessons to life with engaging visual aids and animated explanations.</p></div>
+      <div class="case-card"><h3>Storytellers &amp; Writers</h3><p>See your scenes come alive — visualize your stories before they’re even read.</p></div>
+    </div>
+  </div>
+
+  <div class="faqs">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item"><div class="faq-question"><span>Is this service free to use?</span><span>+</span></div><div class="faq-answer">New accounts get starter credits. Additional credits can be purchased through our payment section above.</div></div>
+    <div class="faq-item"><div class="faq-question"><span>Can I use generated videos for commercial projects?</span><span>+</span></div><div class="faq-answer">Yes — all videos created with a paid plan can be used commercially.</div></div>
+    <div class="faq-item"><div class="faq-question"><span>What video lengths and resolutions are supported?</span><span>+</span></div><div class="faq-answer">Currently supporting 4–8 second videos at 480p, 720p, and 1080p resolutions.</div></div>
+    <div class="faq-item"><div class="faq-question"><span>How do I write better prompts?</span><span>+</span></div><div class="faq-answer">Be specific! Include style, lighting, camera angle, mood, and details about what happens in the scene.</div></div>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 Audz Ai. All rights reserved.</p>
+  <p>Contact: audie1.pino@gmail.com | Cebu City, Philippines</p>
+</footer>
+
+<div id="overlay"><div id="modal"></div></div>
+<div id="toast"></div>
+
+<script>
+/* ===== EDIT THESE ===== */
+const CONFIG = {
+  owner: {name:'Audie Pino', email:'pinoy1.channel@gmail.com'},  // the ONLY account allowed to register and log in
+  email: 'audie1.pino@gmail.com',
+  api: '',   // your backend URL: receives JSON POST, returns {videoUrl}. Empty = demo mode (no charge)
+  packages: [{c:100,p:'₱99'},{c:300,p:'₱249'},{c:800,p:'₱599'}],
+  pay: {
+    GCash: 'Send to GCash: 09XX-XXX-XXXX (account name)',
+    Maya: 'Send to Maya: 09XX-XXX-XXXX (account name)',
+    PayPal: '',  // e.g. https://paypal.me/yourname
+    Card: ''     // your Stripe Payment Link
+  }
+};
+/* ====================== */
+const $ = id => document.getElementById(id);
+let db = {users:{}, cur:null}, pkg = 0, method = 'GCash';
+try { db = JSON.parse(localStorage.getItem('audz')) || db; } catch(e) {}
+const save = () => { try { localStorage.setItem('audz', JSON.stringify(db)); } catch(e) {} };
+const me = () => db.users[db.cur];
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',3200);}
+function modal(html){$('modal').innerHTML=html;$('overlay').classList.add('show');}
+function closeModal(){$('overlay').classList.remove('show');}
+$('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* Auth: owner only */
+const OWNER=CONFIG.owner.email.toLowerCase();
+async function hash(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('audz:'+s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}catch(e){return btoa(unescape(encodeURIComponent('audz:'+s)));}}
+Object.keys(db.users).forEach(k=>{if(k!==OWNER||!db.users[k].ph)delete db.users[k];});
+if(db.cur!==OWNER||!db.users[OWNER])db.cur=null;
+function renderAuth(){
+  const u=me();
+  document.body.classList.toggle('locked',!u);
+  $('userBox').textContent=u?CONFIG.owner.name:'';
+  $('credits').textContent=u?u.credits:0;
+  if(u)renderJobs();else renderGate();
+}
+function renderGate(){
+  const setup=!db.users[OWNER];
+  $('gate').innerHTML=`<div class="box"><h2>${setup?'Owner setup':'Owner login'}</h2><p>${esc(CONFIG.owner.name)} — private site. ${setup?'Create your password to register the owner account.':'Enter your password to continue.'}</p>
+  <input type="email" id="gEmail" value="${esc(OWNER)}" ${setup?'readonly':''} placeholder="Email"><input type="password" id="gPw" placeholder="${setup?'Create password (8+ characters)':'Password'}">${setup?'<input type="password" id="gPw2" placeholder="Confirm password">':''}
+  <button class="generate-btn" onclick="gateSubmit(${setup})">${setup?'Create Account':'Log In'}</button></div>`;
+}
+$('gate').addEventListener('keydown',e=>{if(e.key==='Enter'){const b=$('gate').querySelector('button');b&&b.click();}});
+async function gateSubmit(setup){
+  const e=$('gEmail').value.trim().toLowerCase(),p=$('gPw').value;
+  if(e!==OWNER)return toast('Access denied. This site is private.');
+  if(setup){
+    if(p.length<8)return toast('Password must be 8+ characters.');
+    if(p!==$('gPw2').value)return toast('Passwords do not match.');
+    db.users[OWNER]={ph:await hash(p),credits:100,jobs:[],orders:[]};
+  } else if(!db.users[OWNER]||db.users[OWNER].ph!==await hash(p))return toast('Wrong email or password.');
+  db.cur=OWNER;save();renderAuth();toast('Welcome, '+CONFIG.owner.name);
+}
+function openChangePw(){modal(`<h3>Change password</h3><input type="password" id="cOld" placeholder="Current password"><input type="password" id="cNew" placeholder="New password (8+ characters)"><div class="row"><button class="btn-outline" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="changePw()">Save</button></div>`);}
+async function changePw(){
+  const u=me();if(u.ph!==await hash($('cOld').value))return toast('Current password is wrong.');
+  const n=$('cNew').value;if(n.length<8)return toast('New password must be 8+ characters.');
+  u.ph=await hash(n);save();closeModal();toast('Password changed.');
+}
+$('changePwBtn').onclick=openChangePw;
+$('logoutBtn').onclick=()=>{db.cur=null;save();renderAuth();};
+
+/* Views */
+document.querySelectorAll('.nav-links a').forEach(a=>a.onclick=()=>showView(a.dataset.view));
+function showView(v){
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.dataset.view===v));
+  const ed=v==='t2v'||v==='i2v';
+  $('editor').classList.toggle('hidden',!ed);
+  $('gallery').classList.toggle('hidden',v!=='gallery');
+  $('imgField').classList.toggle('hidden',v!=='i2v');
+  $('pageTitle').textContent={t2v:'Text to Video Generator',i2v:'Image to Video Generator',gallery:'Your Gallery',pricing:'Pricing & Credits'}[v];
+  if(v==='pricing')$('paymentSection').scrollIntoView({behavior:'smooth'});
+  else window.scrollTo({top:0,behavior:'smooth'});
+}
+$('rechargeLink').onclick=()=>$('paymentSection').scrollIntoView({behavior:'smooth'});
+$('exploreLink').onclick=()=>$('examples').scrollIntoView({behavior:'smooth'});
+document.querySelectorAll('.example-card').forEach(c=>c.onclick=()=>{
+  showView($('imgField').classList.contains('hidden')?'t2v':'i2v');
+  $('prompt').value=c.textContent.trim();$('prompt').dispatchEvent(new Event('input'));toast('Example loaded into prompt.');
+});
+
+/* Editor */
+$('prompt').addEventListener('input',()=>$('charCount').textContent=`${$('prompt').value.length} / 20000`);
+document.querySelectorAll('.toggle-switch').forEach(t=>t.onclick=()=>t.classList.toggle('active'));
+function cost(){let c=parseInt($('duration').value);if($('resolution').value==='1080p')c+=2;return c;}
+['duration','resolution'].forEach(i=>$(i).addEventListener('change',()=>$('costDisplay').textContent=cost()));
+$('enhanceBtn').onclick=()=>{
+  let p=$('prompt').value.trim();
+  if(!p)return toast('Type a prompt first.');
+  if(/cinematic lighting/i.test(p))return toast('Prompt already enhanced.');
+  $('prompt').value=p.replace(/\.*$/,'')+'. Cinematic lighting, smooth camera movement, rich detail, vivid colors, high quality, 4K look.';
+  $('prompt').dispatchEvent(new Event('input'));toast('Prompt enhanced.');
+};
+$('generateBtn').onclick=async()=>{
+  const u=me();
+  if(!u)return renderAuth();
+  const prompt=$('prompt').value.trim();
+  if(!prompt)return toast('Please enter a prompt.');
+  const c=cost();
+  if(u.credits<c){toast('Not enough credits. Please recharge.');return $('paymentSection').scrollIntoView({behavior:'smooth'});}
+  const job={id:Date.now(),prompt,model:$('model').value,ratio:$('ratio').value,dur:$('duration').value,res:$('resolution').value,sound:$('soundToggle').classList.contains('active'),wm:$('watermarkToggle').classList.contains('active'),status:'processing',url:'',time:new Date().toLocaleString()};
+  u.jobs.unshift(job);save();showView('gallery');renderJobs();toast('Generating…');
+  if(CONFIG.api){
+    try{
+      const r=await fetch(CONFIG.api,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...job,user:db.cur})});
+      const d=await r.json();if(!d.videoUrl)throw 0;
+      job.url=d.videoUrl;job.status='done';u.credits-=c;
+    }catch(e){job.status='failed';}
+  } else {
+    await new Promise(r=>setTimeout(r,2500));job.status='demo';
+  }
+  save();renderAuth();toast(job.status==='demo'?'Demo mode: connect CONFIG.api for real videos.':job.status==='done'?'Video ready!':'Generation failed. No credits charged.');
+};
+function renderJobs(){
+  const u=me(),el=$('jobList');
+  if(!u)return el.innerHTML='<p style="color:var(--text-muted)">Log in to see your videos.</p>';
+  if(!u.jobs.length)return el.innerHTML='<p style="color:var(--text-muted)">No videos yet. Generate your first one!</p>';
+  el.innerHTML=u.jobs.map(j=>`<div class="job"><div class="thumb">${j.url?`<video controls src="${esc(j.url)}"></video>`:j.status==='processing'?'Generating…':j.status==='failed'?'Failed':'Demo preview'}</div>
+  <div><p>${esc(j.prompt)}</p><small>${esc(j.model)} · ${j.ratio} · ${j.dur} · ${j.res}${j.sound?' · sound':''} · ${j.time} · ${j.status}</small>${j.url?`<br><a class="recharge-link" href="${esc(j.url)}" download>Download</a>`:''}</div></div>`).join('');
+}
+
+/* FAQ */
+document.querySelectorAll('.faq-item').forEach(f=>f.onclick=()=>{
+  f.classList.toggle('open');f.querySelector('.faq-question span:last-child').textContent=f.classList.contains('open')?'−':'+';
+});
+
+/* Payments */
+$('pkgs').innerHTML=CONFIG.packages.map((k,i)=>`<div class="payment-option ${i?'':'selected'}" data-i="${i}"><strong>${k.c} credits</strong><br><span style="color:var(--text-muted)">${k.p}</span></div>`).join('');
+$('pkgs').onclick=e=>{const o=e.target.closest('.payment-option');if(!o)return;pkg=+o.dataset.i;[...$('pkgs').children].forEach(x=>x.classList.toggle('selected',x===o));};
+$('methods').onclick=e=>{const o=e.target.closest('.payment-option');if(!o)return;method=o.dataset.m;[...$('methods').children].forEach(x=>x.classList.toggle('selected',x===o));};
+$('payBtn').onclick=()=>{
+  if(!me())return renderAuth();
+  const k=CONFIG.packages[pkg],info=CONFIG.pay[method];
+  const link=/^https?:/.test(info);
+  if(method==='Card'||method==='PayPal'){
+    if(!link)return modal(`<h3>${method} not connected yet</h3><p>The site owner needs to add a ${method==='Card'?'Stripe Payment Link':'PayPal.me link'} in CONFIG.pay.${method}. Please choose GCash or Maya, or email ${CONFIG.email}.</p><div class="row"><button class="btn-primary" onclick="closeModal()">OK</button></div>`);
+    window.open(info,'_blank','noopener');
+  }
+  modal(`<h3>Pay ${k.p} for ${k.c} credits</h3><p>${link?`Complete your payment in the new tab (${method}), then enter your receipt or transaction number below.`:esc(info)}</p>
+  <p>Amount: <strong style="color:#fff">${k.p}</strong></p><input type="text" id="ref" placeholder="Reference / transaction number">
+  <div class="row"><button class="btn-outline" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="submitOrder()">I have paid</button></div>`);
+};
+function submitOrder(){
+  const ref=$('ref').value.trim();
+  if(ref.length<4)return toast('Enter your reference number.');
+  const k=CONFIG.packages[pkg],o={id:'ORD'+Date.now(),method,credits:k.c,price:k.p,ref,status:'pending',time:new Date().toLocaleString()};
+  me().orders.unshift(o);save();closeModal();
+  const body=`Order: ${o.id}\nAccount: ${db.cur}\nPackage: ${k.c} credits (${k.p})\nMethod: ${method}\nReference: ${ref}`;
+  toast('Order submitted. Opening email to confirm…');
+  location.href=`mailto:${CONFIG.email}?subject=${encodeURIComponent('Payment proof '+o.id)}&body=${encodeURIComponent(body)}`;
+}
+renderAuth();
+</script>
+</body>
+</html>
